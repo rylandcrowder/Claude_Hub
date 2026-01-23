@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Cozy Galaxy</title>
+    <title>Ryland's Landing Page</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect x='6' y='0' width='4' height='2' fill='%23ff6b9d'/><rect x='4' y='2' width='8' height='2' fill='%23fffffe'/><rect x='4' y='4' width='8' height='6' fill='%23fffffe'/><rect x='6' y='5' width='4' height='3' fill='%2382aaff'/><rect x='2' y='8' width='2' height='4' fill='%23ff6b9d'/><rect x='12' y='8' width='2' height='4' fill='%23ff6b9d'/><rect x='5' y='12' width='2' height='2' fill='%23ffcb6b'/><rect x='9' y='12' width='2' height='2' fill='%23ffcb6b'/><rect x='7' y='14' width='2' height='2' fill='%23ff6b4a'/></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
@@ -69,13 +69,38 @@
         .galaxy-bg {
             position: fixed;
             inset: 0;
-            background:
-                radial-gradient(ellipse at 20% 20%, rgba(45, 27, 78, 0.4) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(45, 27, 78, 0.3) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(26, 22, 38, 0.8) 0%, transparent 70%),
-                var(--bg-deep);
+            background: var(--bg-deep);
             pointer-events: none;
             z-index: 0;
+        }
+
+        /* Nebula Layer */
+        .nebula-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                /* Main pink/magenta nebula cloud - center right */
+                radial-gradient(ellipse 60% 50% at 75% 40%, rgba(255, 107, 157, 0.15) 0%, rgba(255, 107, 157, 0.08) 30%, transparent 70%),
+                /* Purple nebula - top left */
+                radial-gradient(ellipse 70% 60% at 15% 20%, rgba(199, 146, 234, 0.12) 0%, rgba(150, 100, 200, 0.06) 40%, transparent 70%),
+                /* Cyan nebula wisp - bottom */
+                radial-gradient(ellipse 80% 40% at 50% 85%, rgba(130, 170, 255, 0.1) 0%, rgba(130, 170, 255, 0.05) 30%, transparent 60%),
+                /* Deep purple core - center */
+                radial-gradient(ellipse 50% 50% at 50% 50%, rgba(45, 27, 78, 0.4) 0%, transparent 60%),
+                /* Orange/yellow accent - bottom right */
+                radial-gradient(ellipse 40% 35% at 85% 75%, rgba(255, 203, 107, 0.08) 0%, rgba(255, 107, 74, 0.04) 40%, transparent 70%),
+                /* Secondary pink glow - left side */
+                radial-gradient(ellipse 35% 50% at 5% 60%, rgba(255, 107, 157, 0.1) 0%, transparent 60%),
+                /* Subtle blue haze - top */
+                radial-gradient(ellipse 100% 30% at 50% 0%, rgba(130, 170, 255, 0.08) 0%, transparent 50%);
+            animation: nebulaPulse 20s ease-in-out infinite;
+        }
+
+        @keyframes nebulaPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
         }
 
         .stars-layer {
@@ -241,13 +266,219 @@
             width: 12px;
             height: 12px;
             top: 35%;
-            left: 15%;
+            left: 3%;
             animation: float-slow 7s ease-in-out infinite, spin 20s linear infinite;
             animation-delay: -2s;
             background:
                 linear-gradient(var(--purple) 0 0) 4px 0 / 4px 4px,
                 linear-gradient(var(--purple) 0 0) 0 4px / 12px 4px,
                 linear-gradient(var(--purple) 0 0) 4px 8px / 4px 4px;
+            background-repeat: no-repeat;
+        }
+
+        /* Large gas giant - top left */
+        .pixel-planet--giant {
+            width: 56px;
+            height: 56px;
+            top: 5%;
+            left: 2%;
+            animation: float-slow 12s ease-in-out infinite;
+            background:
+                /* Main body */
+                linear-gradient(#e07848 0 0) 20px 0 / 16px 4px,
+                linear-gradient(#d86840 0 0) 12px 4px / 32px 4px,
+                linear-gradient(#e07848 0 0) 8px 8px / 40px 4px,
+                linear-gradient(#c85830 0 0) 4px 12px / 48px 4px,
+                linear-gradient(#e07848 0 0) 4px 16px / 48px 4px,
+                linear-gradient(#d86840 0 0) 4px 20px / 48px 4px,
+                linear-gradient(#c85830 0 0) 4px 24px / 48px 4px,
+                linear-gradient(#e07848 0 0) 4px 28px / 48px 4px,
+                linear-gradient(#d86840 0 0) 4px 32px / 48px 4px,
+                linear-gradient(#c85830 0 0) 8px 36px / 40px 4px,
+                linear-gradient(#d86840 0 0) 12px 40px / 32px 4px,
+                linear-gradient(#e07848 0 0) 20px 44px / 16px 4px,
+                /* Storm spot */
+                linear-gradient(#f8a878 0 0) 32px 20px / 8px 8px;
+            background-repeat: no-repeat;
+        }
+
+        /* Ringed planet - bottom left */
+        .pixel-planet--ringed {
+            width: 44px;
+            height: 36px;
+            bottom: 8%;
+            left: 3%;
+            animation: float-slow 9s ease-in-out infinite;
+            animation-delay: -4s;
+            background:
+                /* Ring back */
+                linear-gradient(var(--yellow) 0 0) 0 12px / 44px 4px,
+                /* Planet body */
+                linear-gradient(#8888cc 0 0) 16px 4px / 12px 4px,
+                linear-gradient(#9999dd 0 0) 12px 8px / 20px 4px,
+                linear-gradient(#8888cc 0 0) 12px 12px / 20px 4px,
+                linear-gradient(#7777bb 0 0) 12px 16px / 20px 4px,
+                linear-gradient(#8888cc 0 0) 16px 20px / 12px 4px,
+                /* Ring front */
+                linear-gradient(var(--yellow) 0 0) 0 16px / 12px 4px,
+                linear-gradient(var(--yellow) 0 0) 32px 16px / 12px 4px;
+            background-repeat: no-repeat;
+        }
+
+        /* Ice planet - top right */
+        .pixel-planet--ice {
+            width: 28px;
+            height: 28px;
+            top: 3%;
+            right: 3%;
+            animation: float-slow 8s ease-in-out infinite;
+            animation-delay: -1s;
+            background:
+                linear-gradient(#aaddff 0 0) 10px 0 / 8px 4px,
+                linear-gradient(#88ccff 0 0) 6px 4px / 16px 4px,
+                linear-gradient(#aaddff 0 0) 2px 8px / 24px 4px,
+                linear-gradient(#88ccff 0 0) 2px 12px / 24px 4px,
+                linear-gradient(#aaddff 0 0) 2px 16px / 24px 4px,
+                linear-gradient(#88ccff 0 0) 6px 20px / 16px 4px,
+                linear-gradient(#aaddff 0 0) 10px 24px / 8px 4px,
+                /* Ice caps */
+                linear-gradient(#ffffff 0 0) 10px 2px / 8px 2px,
+                linear-gradient(#ffffff 0 0) 10px 22px / 8px 2px;
+            background-repeat: no-repeat;
+        }
+
+        /* Red dwarf star - right edge */
+        .pixel-planet--star {
+            width: 20px;
+            height: 20px;
+            top: 45%;
+            right: 2%;
+            animation: float-slow 6s ease-in-out infinite, starGlow 2s ease-in-out infinite;
+            background:
+                linear-gradient(#ff6b4a 0 0) 8px 0 / 4px 4px,
+                linear-gradient(#ff8866 0 0) 4px 4px / 12px 4px,
+                linear-gradient(#ffaa88 0 0) 4px 8px / 12px 4px,
+                linear-gradient(#ff8866 0 0) 4px 12px / 12px 4px,
+                linear-gradient(#ff6b4a 0 0) 8px 16px / 4px 4px;
+            background-repeat: no-repeat;
+        }
+
+        @keyframes starGlow {
+            0%, 100% { filter: drop-shadow(0 0 4px rgba(255, 107, 74, 0.8)); }
+            50% { filter: drop-shadow(0 0 12px rgba(255, 136, 102, 1)); }
+        }
+
+        /* Comet - crosses screen */
+        .pixel-comet {
+            width: 24px;
+            height: 8px;
+            top: 25%;
+            left: -30px;
+            animation: cometFly 25s linear infinite;
+            background:
+                /* Tail */
+                linear-gradient(90deg, transparent, rgba(130, 170, 255, 0.3), rgba(130, 170, 255, 0.6)) 0 2px / 16px 4px,
+                /* Core */
+                linear-gradient(#aaddff 0 0) 16px 0 / 4px 4px,
+                linear-gradient(#ffffff 0 0) 16px 4px / 8px 4px,
+                linear-gradient(#aaddff 0 0) 20px 8px / 4px 4px;
+            background-repeat: no-repeat;
+        }
+
+        @keyframes cometFly {
+            0% { transform: translate(-30px, 0); opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translate(calc(100vw + 50px), 200px); opacity: 0; }
+        }
+
+        /* Small asteroids cluster - bottom right */
+        .pixel-asteroid-1 {
+            width: 8px;
+            height: 8px;
+            bottom: 15%;
+            right: 5%;
+            animation: float-slow 5s ease-in-out infinite, spin 15s linear infinite;
+            background:
+                linear-gradient(#666 0 0) 2px 0 / 4px 2px,
+                linear-gradient(#888 0 0) 0 2px / 8px 4px,
+                linear-gradient(#666 0 0) 2px 6px / 4px 2px;
+            background-repeat: no-repeat;
+        }
+
+        .pixel-asteroid-2 {
+            width: 6px;
+            height: 6px;
+            bottom: 18%;
+            right: 8%;
+            animation: float-slow 4s ease-in-out infinite, spin 12s linear infinite reverse;
+            animation-delay: -2s;
+            background:
+                linear-gradient(#777 0 0) 2px 0 / 2px 2px,
+                linear-gradient(#999 0 0) 0 2px / 6px 2px,
+                linear-gradient(#777 0 0) 2px 4px / 2px 2px;
+            background-repeat: no-repeat;
+        }
+
+        .pixel-asteroid-3 {
+            width: 10px;
+            height: 6px;
+            bottom: 12%;
+            right: 10%;
+            animation: float-slow 6s ease-in-out infinite, spin 18s linear infinite;
+            animation-delay: -1s;
+            background:
+                linear-gradient(#888 0 0) 2px 0 / 6px 2px,
+                linear-gradient(#666 0 0) 0 2px / 10px 2px,
+                linear-gradient(#888 0 0) 2px 4px / 6px 2px;
+            background-repeat: no-repeat;
+        }
+
+        /* Distant galaxy spiral - top center */
+        .pixel-galaxy {
+            width: 32px;
+            height: 32px;
+            top: 8%;
+            left: 45%;
+            opacity: 0.6;
+            animation: float-slow 15s ease-in-out infinite, spin 60s linear infinite;
+            background:
+                /* Core */
+                linear-gradient(#ffddaa 0 0) 14px 14px / 4px 4px,
+                /* Spiral arms */
+                linear-gradient(rgba(255, 221, 170, 0.7) 0 0) 10px 12px / 4px 2px,
+                linear-gradient(rgba(255, 221, 170, 0.5) 0 0) 6px 10px / 4px 2px,
+                linear-gradient(rgba(255, 221, 170, 0.3) 0 0) 4px 14px / 2px 2px,
+                linear-gradient(rgba(255, 221, 170, 0.7) 0 0) 18px 16px / 4px 2px,
+                linear-gradient(rgba(255, 221, 170, 0.5) 0 0) 22px 18px / 4px 2px,
+                linear-gradient(rgba(255, 221, 170, 0.3) 0 0) 26px 14px / 2px 2px,
+                linear-gradient(rgba(199, 146, 234, 0.4) 0 0) 8px 18px / 2px 2px,
+                linear-gradient(rgba(130, 170, 255, 0.4) 0 0) 22px 10px / 2px 2px;
+            background-repeat: no-repeat;
+        }
+
+        /* Moon with craters - left middle */
+        .pixel-moon {
+            width: 36px;
+            height: 36px;
+            top: 65%;
+            left: 2%;
+            animation: float-slow 11s ease-in-out infinite;
+            animation-delay: -6s;
+            background:
+                /* Main body */
+                linear-gradient(#ccccbb 0 0) 14px 0 / 8px 4px,
+                linear-gradient(#ddddcc 0 0) 8px 4px / 20px 4px,
+                linear-gradient(#ccccbb 0 0) 4px 8px / 28px 4px,
+                linear-gradient(#ddddcc 0 0) 4px 12px / 28px 4px,
+                linear-gradient(#ccccbb 0 0) 4px 16px / 28px 4px,
+                linear-gradient(#ddddcc 0 0) 4px 20px / 28px 4px,
+                linear-gradient(#ccccbb 0 0) 8px 24px / 20px 4px,
+                linear-gradient(#ddddcc 0 0) 14px 28px / 8px 4px,
+                /* Craters */
+                linear-gradient(#aaaaaa 0 0) 10px 8px / 6px 4px,
+                linear-gradient(#999999 0 0) 22px 14px / 4px 4px,
+                linear-gradient(#aaaaaa 0 0) 12px 20px / 4px 4px;
             background-repeat: no-repeat;
         }
 
@@ -473,6 +704,32 @@
             background-repeat: no-repeat;
         }
 
+        /* Star icon for Starfield project */
+        .project-card__icon--star {
+            background:
+                /* Main star shape */
+                linear-gradient(var(--yellow) 0 0) 28px 0 / 8px 8px,
+                linear-gradient(var(--yellow) 0 0) 28px 8px / 8px 8px,
+                linear-gradient(var(--yellow) 0 0) 0px 24px / 64px 8px,
+                linear-gradient(var(--yellow) 0 0) 20px 16px / 24px 8px,
+                linear-gradient(var(--yellow) 0 0) 20px 32px / 24px 8px,
+                linear-gradient(var(--yellow) 0 0) 12px 40px / 16px 8px,
+                linear-gradient(var(--yellow) 0 0) 36px 40px / 16px 8px,
+                linear-gradient(var(--yellow) 0 0) 8px 48px / 12px 8px,
+                linear-gradient(var(--yellow) 0 0) 44px 48px / 12px 8px,
+                linear-gradient(var(--yellow) 0 0) 4px 56px / 8px 8px,
+                linear-gradient(var(--yellow) 0 0) 52px 56px / 8px 8px,
+                /* Bright center */
+                linear-gradient(#fff 0 0) 28px 24px / 8px 8px;
+            background-repeat: no-repeat;
+            animation: starIconGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes starIconGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 203, 107, 0.6)); }
+            50% { filter: drop-shadow(0 0 16px rgba(255, 203, 107, 1)); }
+        }
+
         .project-card__title {
             font-family: 'Press Start 2P', cursive;
             font-size: 12px;
@@ -610,6 +867,9 @@
     <!-- Galaxy Background Layer -->
     <div class="galaxy-bg" aria-hidden="true"></div>
 
+    <!-- Nebula Layer -->
+    <div class="nebula-layer" aria-hidden="true"></div>
+
     <!-- Stars Layer -->
     <div class="stars-layer" aria-hidden="true">
         <!-- Extra small stars -->
@@ -652,12 +912,29 @@
         <div class="shooting-star shooting-star--2" style="top: 40%; left: 50%;"></div>
     </div>
 
-    <!-- Floating Pixel Planets -->
+    <!-- Floating Pixel Planets & Celestial Bodies -->
     <div class="planets-layer" aria-hidden="true">
+        <!-- Original planets -->
         <div class="pixel-planet pixel-planet--pink"></div>
         <div class="pixel-planet pixel-planet--cyan"></div>
         <div class="pixel-planet pixel-planet--yellow"></div>
         <div class="pixel-planet pixel-planet--purple"></div>
+
+        <!-- New celestial bodies around edges -->
+        <div class="pixel-planet pixel-planet--giant"></div>
+        <div class="pixel-planet pixel-planet--ringed"></div>
+        <div class="pixel-planet pixel-planet--ice"></div>
+        <div class="pixel-planet pixel-planet--star"></div>
+        <div class="pixel-planet pixel-moon"></div>
+        <div class="pixel-planet pixel-galaxy"></div>
+
+        <!-- Comet -->
+        <div class="pixel-planet pixel-comet"></div>
+
+        <!-- Asteroid cluster -->
+        <div class="pixel-planet pixel-asteroid-1"></div>
+        <div class="pixel-planet pixel-asteroid-2"></div>
+        <div class="pixel-planet pixel-asteroid-3"></div>
     </div>
 
     <!-- Main Page Content -->
@@ -666,31 +943,12 @@
             <!-- Hero Section -->
             <header class="hero">
                 <div class="hero__icon" role="img" aria-label="Pixel art rocket ship"></div>
-                <h1 class="hero__title">Welcome to My Galaxy</h1>
-                <p class="hero__subtitle">A cozy corner of the cosmos</p>
-                <p class="hero__tagline">~ where pixels meet stars ~</p>
+                <h1 class="hero__title">Ryland's Landing Page</h1>
             </header>
-
-            <!-- About Section -->
-            <section class="about" aria-labelledby="about-heading">
-                <div class="about__content">
-                    <h2 id="about-heading" class="visually-hidden">About</h2>
-                    <p class="about__text">
-                        Hey there, space traveler! Welcome to my little corner of the universe.
-                        Pull up a comet and stay awhile. This is where I share the things I create
-                        and the adventures I embark on through code.
-                    </p>
-                    <div class="about__divider" aria-hidden="true">
-                        <div class="about__divider-star"></div>
-                        <div class="about__divider-star"></div>
-                        <div class="about__divider-star"></div>
-                    </div>
-                </div>
-            </section>
 
             <!-- Projects Section -->
             <section class="projects" aria-labelledby="projects-heading">
-                <h2 id="projects-heading" class="projects__title">~ Projects ~</h2>
+                <h2 id="projects-heading" class="visually-hidden">Projects</h2>
                 <div class="projects__grid">
                     <!-- Hello World Project -->
                     <article class="project-card">
@@ -702,11 +960,21 @@
                         <div class="project-card__body">
                             <div class="project-card__icon" role="img" aria-label="Pixel art Earth"></div>
                             <h3 class="project-card__title">Hello World</h3>
-                            <p class="project-card__desc">
-                                A friendly greeting from across the digital cosmos.
-                                My first creation in this stellar portfolio.
-                            </p>
                             <a href="hello-world.html" class="project-card__link">View Project</a>
+                        </div>
+                    </article>
+
+                    <!-- Starfield Project -->
+                    <article class="project-card">
+                        <div class="project-card__header">
+                            <span class="project-card__dot project-card__dot--red"></span>
+                            <span class="project-card__dot project-card__dot--yellow"></span>
+                            <span class="project-card__dot project-card__dot--green"></span>
+                        </div>
+                        <div class="project-card__body">
+                            <div class="project-card__icon project-card__icon--star" role="img" aria-label="Pixel art star"></div>
+                            <h3 class="project-card__title">Starfield</h3>
+                            <a href="starfield.html" class="project-card__link">View Project</a>
                         </div>
                     </article>
                 </div>
@@ -716,10 +984,6 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="container">
-                <p class="footer__message">
-                    Made with <span class="footer__heart" aria-label="love">&#10084;</span> in the galaxy
-                </p>
-                <p class="footer__copy">&copy; 2025 My Cosmic Corner</p>
                 <div class="footer__stars" aria-hidden="true">
                     <span class="footer__star"></span>
                     <span class="footer__star"></span>
