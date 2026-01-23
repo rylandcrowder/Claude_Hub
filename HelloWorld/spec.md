@@ -4,7 +4,7 @@
 ## Overview
 
 
-A single-page retro arcade-styled "Hello World" website designed for GitHub Pages deployment. The page features a flamboyant 80s arcade aesthetic with extensive CSS animations.
+A single-page retro arcade-styled "Hello World" website designed for GitHub Pages deployment. The page features a 80s arcade aesthetic with extensive CSS animations.
 
 
 ## Technical Stack
