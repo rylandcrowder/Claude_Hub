@@ -730,6 +730,38 @@
             50% { filter: drop-shadow(0 0 16px rgba(255, 203, 107, 1)); }
         }
 
+        /* Web/Network icon for Stellar Web project */
+        .project-card__icon--web {
+            background:
+                /* Center node */
+                linear-gradient(var(--purple) 0 0) 28px 28px / 8px 8px,
+                /* Surrounding nodes */
+                linear-gradient(var(--cyan) 0 0) 12px 12px / 6px 6px,
+                linear-gradient(var(--cyan) 0 0) 46px 12px / 6px 6px,
+                linear-gradient(var(--cyan) 0 0) 8px 44px / 6px 6px,
+                linear-gradient(var(--cyan) 0 0) 50px 44px / 6px 6px,
+                linear-gradient(var(--pink) 0 0) 28px 4px / 6px 6px,
+                linear-gradient(var(--pink) 0 0) 4px 28px / 6px 6px,
+                linear-gradient(var(--pink) 0 0) 54px 28px / 6px 6px,
+                linear-gradient(var(--pink) 0 0) 28px 54px / 6px 6px,
+                /* Connection lines */
+                linear-gradient(var(--purple) 0 0) 18px 18px / 12px 2px,
+                linear-gradient(var(--purple) 0 0) 36px 18px / 12px 2px,
+                linear-gradient(var(--purple) 0 0) 14px 44px / 16px 2px,
+                linear-gradient(var(--purple) 0 0) 36px 44px / 16px 2px,
+                linear-gradient(var(--purple) 0 0) 30px 10px / 2px 18px,
+                linear-gradient(var(--purple) 0 0) 30px 36px / 2px 18px,
+                linear-gradient(var(--purple) 0 0) 10px 30px / 18px 2px,
+                linear-gradient(var(--purple) 0 0) 36px 30px / 18px 2px;
+            background-repeat: no-repeat;
+            animation: webPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes webPulse {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(199, 146, 234, 0.5)); }
+            50% { filter: drop-shadow(0 0 12px rgba(130, 170, 255, 0.8)); }
+        }
+
         .project-card__title {
             font-family: 'Press Start 2P', cursive;
             font-size: 12px;
@@ -975,6 +1007,20 @@
                             <div class="project-card__icon project-card__icon--star" role="img" aria-label="Pixel art star"></div>
                             <h3 class="project-card__title">Starfield</h3>
                             <a href="Starfield/starfield.html" class="project-card__link">View Project</a>
+                        </div>
+                    </article>
+
+                    <!-- Stellar Web Project -->
+                    <article class="project-card">
+                        <div class="project-card__header">
+                            <span class="project-card__dot project-card__dot--red"></span>
+                            <span class="project-card__dot project-card__dot--yellow"></span>
+                            <span class="project-card__dot project-card__dot--green"></span>
+                        </div>
+                        <div class="project-card__body">
+                            <div class="project-card__icon project-card__icon--web" role="img" aria-label="Pixel art web network"></div>
+                            <h3 class="project-card__title">Stellar Web</h3>
+                            <a href="StellarWeb/index.html" class="project-card__link">View Project</a>
                         </div>
                     </article>
                 </div>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stellar Web</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a2a 100%);
+            min-height: 100vh;
+            color: #e0e0ff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
+        }
+
+        .canvas-container {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(96, 165, 250, 0.2),
+                        inset 0 0 60px rgba(0, 0, 0, 0.5);
+        }
+
+        canvas {
+            display: block;
+            background: radial-gradient(ellipse at center, #0d0d20 0%, #050510 100%);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            max-width: 900px;
+            width: 100%;
+            padding: 25px;
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 16px;
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #a0a0cc;
+        }
+
+        .control-value {
+            font-weight: bold;
+            color: #60a5fa;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(60, 60, 100, 0.5);
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.8);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(96, 165, 250, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(60, 60, 100, 0.5);
+            color: #a0a0cc;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(96, 165, 250, 0.2);
+            color: #e0e0ff;
+        }
+
+        .presets {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .preset-btn {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            background: rgba(40, 40, 80, 0.6);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            color: #a0a0cc;
+        }
+
+        .preset-btn:hover {
+            background: rgba(96, 165, 250, 0.2);
+            border-color: rgba(96, 165, 250, 0.5);
+            color: #e0e0ff;
+        }
+
+        .stats {
+            font-size: 0.85rem;
+            color: #808090;
+            text-align: center;
+        }
+
+        .network-stats {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 16px;
+            padding: 20px 25px;
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .network-stats__title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #60a5fa;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .network-stats__grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px 40px;
+        }
+
+        .network-stats__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.9rem;
+        }
+
+        .network-stats__label {
+            color: #a0a0cc;
+            font-size: 0.8rem;
+        }
+
+        .network-stats__value {
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: #e0e0ff;
+            font-family: 'Courier New', monospace;
+        }
+
+        .network-stats__value--highlight {
+            color: #a78bfa;
+        }
+
+        .fullscreen .network-stats {
+            max-width: 100%;
+            border-radius: 0;
+            margin-top: 20px;
+        }
+
+        .mouse-mode {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background: rgba(30, 30, 60, 0.5);
+            border-radius: 8px;
+        }
+
+        .mouse-mode label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .mouse-mode input[type="radio"] {
+            accent-color: #60a5fa;
+        }
+
+        .mouse-mode label:hover {
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        .fullscreen .container {
+            padding: 0;
+            gap: 0;
+            align-items: stretch;
+        }
+
+        .fullscreen .canvas-container {
+            border-radius: 0;
+            box-shadow: none;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .fullscreen canvas {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .fullscreen .controls {
+            max-width: 100%;
+            border-radius: 0;
+            margin-top: 20px;
+            padding: 30px;
+        }
+
+        .fullscreen h1 {
+            display: none;
+        }
+
+        .fullscreen .buttons,
+        .fullscreen .presets {
+            padding: 20px;
+        }
+
+        .exit-fullscreen-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 101;
+            padding: 10px 20px;
+            background: rgba(40, 40, 80, 0.8);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            color: #a0a0cc;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .exit-fullscreen-btn:hover {
+            background: rgba(96, 165, 250, 0.3);
+            color: #e0e0ff;
+        }
+
+        .fullscreen .exit-fullscreen-btn {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .controls {
+                padding: 15px;
+            }
+
+            .control-group {
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="exit-fullscreen-btn" id="exitFullscreenBtn">Exit Fullscreen</button>
+    <div class="container">
+        <h1>Stellar Web</h1>
+
+        <div class="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <div class="network-stats" id="networkStats">
+            <div class="network-stats__title">Network Statistics</div>
+            <div class="network-stats__grid">
+                <div class="network-stats__item">
+                    <span class="network-stats__value" id="statEdges">0</span>
+                    <span class="network-stats__label">Total Edges</span>
+                </div>
+                <div class="network-stats__item">
+                    <span class="network-stats__value" id="statAvgConn">0.00</span>
+                    <span class="network-stats__label">Avg Connections</span>
+                </div>
+                <div class="network-stats__item">
+                    <span class="network-stats__value network-stats__value--highlight" id="statDensity">0.00%</span>
+                    <span class="network-stats__label">Network Density</span>
+                </div>
+                <div class="network-stats__item">
+                    <span class="network-stats__value" id="statMaxEdges">0</span>
+                    <span class="network-stats__label">Max Possible</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Node Count</span>
+                    <span class="control-value" id="nodeCountValue">100</span>
+                </div>
+                <input type="range" id="nodeCount" min="10" max="300" value="100">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Node Size</span>
+                    <span class="control-value" id="nodeSizeValue">3</span>
+                </div>
+                <input type="range" id="nodeSize" min="1" max="10" value="3" step="0.5">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Speed</span>
+                    <span class="control-value" id="speedValue">1.0</span>
+                </div>
+                <input type="range" id="speed" min="0.1" max="5" value="1" step="0.1">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Connectivity Radius</span>
+                    <span class="control-value" id="radiusValue">150</span>
+                </div>
+                <input type="range" id="radius" min="50" max="300" value="150">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Edge Thickness</span>
+                    <span class="control-value" id="thicknessValue">1.5</span>
+                </div>
+                <input type="range" id="thickness" min="0.5" max="5" value="1.5" step="0.1">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Edge Opacity</span>
+                    <span class="control-value" id="opacityValue">0.6</span>
+                </div>
+                <input type="range" id="opacity" min="0.1" max="1" value="0.6" step="0.05">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Mouse Strength</span>
+                    <span class="control-value" id="mouseStrengthValue">50</span>
+                </div>
+                <input type="range" id="mouseStrength" min="0" max="200" value="50">
+            </div>
+
+            <div class="control-group mouse-mode">
+                <span>Mouse Mode:</span>
+                <label>
+                    <input type="radio" name="mouseMode" value="attract" checked>
+                    Attract
+                </label>
+                <label>
+                    <input type="radio" name="mouseMode" value="repel">
+                    Repel
+                </label>
+                <label>
+                    <input type="radio" name="mouseMode" value="none">
+                    None
+                </label>
+            </div>
+        </div>
+
+        <div class="presets">
+            <button class="preset-btn" data-preset="sparse">Sparse</button>
+            <button class="preset-btn" data-preset="dense">Dense</button>
+            <button class="preset-btn" data-preset="chaotic">Chaotic</button>
+            <button class="preset-btn" data-preset="minimal">Minimal</button>
+            <button class="preset-btn" data-preset="cosmic">Cosmic</button>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-primary" id="resetBtn">Reset Particles</button>
+            <button class="btn-secondary" id="fullscreenBtn">Fullscreen</button>
+        </div>
+
+        <div class="stats" id="stats">Connections: 0 | FPS: 60</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        function resizeCanvas(scaleParticles = false) {
+            const oldWidth = canvas.width || 1;
+            const oldHeight = canvas.height || 1;
+
+            const isFullscreen = document.body.classList.contains('fullscreen');
+            canvas.width = isFullscreen ? window.innerWidth : Math.min(900, window.innerWidth - 40);
+            canvas.height = isFullscreen ? window.innerHeight : Math.min(600, window.innerHeight - 400);
+
+            // Scale particle positions proportionally to new canvas size
+            if (scaleParticles && particles && particles.length > 0) {
+                const scaleX = canvas.width / oldWidth;
+                const scaleY = canvas.height / oldHeight;
+                for (const particle of particles) {
+                    particle.x *= scaleX;
+                    particle.y *= scaleY;
+                }
+            }
+
+            // Scroll to top when entering fullscreen
+            if (isFullscreen) {
+                window.scrollTo(0, 0);
+            }
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Parameters
+        let params = {
+            nodeCount: 100,
+            nodeSize: 3,
+            speed: 1,
+            radius: 150,
+            thickness: 1.5,
+            opacity: 0.6,
+            mouseStrength: 50,
+            mouseMode: 'attract'
+        };
+
+        // Mouse position
+        let mouse = { x: null, y: null };
+
+        // Particle class
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.baseSpeed = 0.5 + Math.random() * 0.5;
+                this.hue = 200 + Math.random() * 60; // Blue to purple range
+                this.pulsePhase = Math.random() * Math.PI * 2;
+            }
+
+            update() {
+                // Apply mouse interaction
+                if (mouse.x !== null && params.mouseMode !== 'none' && params.mouseStrength > 0) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 200 && dist > 0) {
+                        const force = (params.mouseStrength / 1000) * (1 - dist / 200);
+                        const angle = Math.atan2(dy, dx);
+
+                        if (params.mouseMode === 'attract') {
+                            this.vx += Math.cos(angle) * force;
+                            this.vy += Math.sin(angle) * force;
+                        } else if (params.mouseMode === 'repel') {
+                            this.vx -= Math.cos(angle) * force;
+                            this.vy -= Math.sin(angle) * force;
+                        }
+                    }
+                }
+
+                // Apply velocity with speed multiplier
+                this.x += this.vx * params.speed * this.baseSpeed;
+                this.y += this.vy * params.speed * this.baseSpeed;
+
+                // Damping
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+
+                // Ensure minimum velocity
+                const currentSpeed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                if (currentSpeed < 0.5) {
+                    this.vx = (this.vx / currentSpeed || 1) * 0.5;
+                    this.vy = (this.vy / currentSpeed || 0) * 0.5;
+                }
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) {
+                    this.vx *= -1;
+                    this.x = Math.max(0, Math.min(canvas.width, this.x));
+                }
+                if (this.y < 0 || this.y > canvas.height) {
+                    this.vy *= -1;
+                    this.y = Math.max(0, Math.min(canvas.height, this.y));
+                }
+
+                // Update pulse phase
+                this.pulsePhase += 0.02;
+            }
+
+            draw() {
+                const pulse = 1 + Math.sin(this.pulsePhase) * 0.2;
+                const size = params.nodeSize * pulse;
+
+                // Glow effect
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, size * 3
+                );
+                gradient.addColorStop(0, `hsla(${this.hue}, 80%, 70%, 0.8)`);
+                gradient.addColorStop(0.5, `hsla(${this.hue}, 80%, 60%, 0.3)`);
+                gradient.addColorStop(1, `hsla(${this.hue}, 80%, 50%, 0)`);
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, size * 3, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                // Core
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${this.hue}, 80%, 80%, 1)`;
+                ctx.fill();
+            }
+        }
+
+        // Particles array
+        let particles = [];
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < params.nodeCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function updateParticleCount() {
+            while (particles.length < params.nodeCount) {
+                particles.push(new Particle());
+            }
+            while (particles.length > params.nodeCount) {
+                particles.pop();
+            }
+        }
+
+        // Draw connections
+        function drawConnections() {
+            let connectionCount = 0;
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < params.radius) {
+                        connectionCount++;
+                        const opacity = (1 - dist / params.radius) * params.opacity;
+                        const thickness = params.thickness * (1 - dist / params.radius * 0.5);
+
+                        // Gradient line
+                        const gradient = ctx.createLinearGradient(
+                            particles[i].x, particles[i].y,
+                            particles[j].x, particles[j].y
+                        );
+                        gradient.addColorStop(0, `hsla(${particles[i].hue}, 70%, 60%, ${opacity})`);
+                        gradient.addColorStop(1, `hsla(${particles[j].hue}, 70%, 60%, ${opacity})`);
+
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = gradient;
+                        ctx.lineWidth = thickness;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            return connectionCount;
+        }
+
+        // FPS tracking
+        let lastTime = performance.now();
+        let frameCount = 0;
+        let fps = 60;
+
+        // Network statistics update function
+        function updateNetworkStats(connectionCount) {
+            const n = particles.length;
+            const maxPossibleEdges = (n * (n - 1)) / 2;
+            const avgConnections = n > 0 ? (connectionCount * 2) / n : 0;
+            const density = maxPossibleEdges > 0 ? (connectionCount / maxPossibleEdges) * 100 : 0;
+
+            document.getElementById('statEdges').textContent = connectionCount;
+            document.getElementById('statAvgConn').textContent = avgConnections.toFixed(2);
+            document.getElementById('statDensity').textContent = density.toFixed(2) + '%';
+            document.getElementById('statMaxEdges').textContent = maxPossibleEdges;
+        }
+
+        // Animation loop
+        function animate() {
+            // Clear canvas with fade effect
+            ctx.fillStyle = 'rgba(5, 5, 16, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw connections first (behind particles)
+            const connectionCount = drawConnections();
+
+            // Update and draw particles
+            for (const particle of particles) {
+                particle.update();
+                particle.draw();
+            }
+
+            // FPS calculation
+            frameCount++;
+            const currentTime = performance.now();
+            if (currentTime - lastTime >= 1000) {
+                fps = Math.round(frameCount * 1000 / (currentTime - lastTime));
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+
+            // Update stats
+            document.getElementById('stats').textContent =
+                `Connections: ${connectionCount} | FPS: ${fps}`;
+
+            // Update network statistics
+            updateNetworkStats(connectionCount);
+
+            requestAnimationFrame(animate);
+        }
+
+        // Event listeners for sliders
+        const sliders = {
+            nodeCount: { param: 'nodeCount', display: 'nodeCountValue', callback: updateParticleCount },
+            nodeSize: { param: 'nodeSize', display: 'nodeSizeValue' },
+            speed: { param: 'speed', display: 'speedValue' },
+            radius: { param: 'radius', display: 'radiusValue' },
+            thickness: { param: 'thickness', display: 'thicknessValue' },
+            opacity: { param: 'opacity', display: 'opacityValue' },
+            mouseStrength: { param: 'mouseStrength', display: 'mouseStrengthValue' }
+        };
+
+        for (const [id, config] of Object.entries(sliders)) {
+            const slider = document.getElementById(id);
+            slider.addEventListener('input', (e) => {
+                params[config.param] = parseFloat(e.target.value);
+                document.getElementById(config.display).textContent = e.target.value;
+                if (config.callback) config.callback();
+            });
+        }
+
+        // Mouse mode
+        document.querySelectorAll('input[name="mouseMode"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                params.mouseMode = e.target.value;
+            });
+        });
+
+        // Mouse tracking
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Reset button
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            for (const particle of particles) {
+                particle.reset();
+            }
+        });
+
+        // Fullscreen button
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            document.body.classList.toggle('fullscreen');
+            resizeCanvas(true);
+            // Clear canvas to avoid artifacts
+            ctx.fillStyle = 'rgba(5, 5, 16, 1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+
+        // Exit fullscreen button
+        document.getElementById('exitFullscreenBtn').addEventListener('click', () => {
+            document.body.classList.remove('fullscreen');
+            resizeCanvas(true);
+            ctx.fillStyle = 'rgba(5, 5, 16, 1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+
+        // Presets
+        const presets = {
+            sparse: { nodeCount: 30, nodeSize: 4, speed: 0.5, radius: 200, thickness: 2, opacity: 0.8, mouseStrength: 80 },
+            dense: { nodeCount: 250, nodeSize: 2, speed: 0.8, radius: 100, thickness: 1, opacity: 0.5, mouseStrength: 30 },
+            chaotic: { nodeCount: 150, nodeSize: 3, speed: 4, radius: 120, thickness: 1.5, opacity: 0.7, mouseStrength: 150 },
+            minimal: { nodeCount: 20, nodeSize: 5, speed: 0.3, radius: 250, thickness: 3, opacity: 0.9, mouseStrength: 100 },
+            cosmic: { nodeCount: 100, nodeSize: 3, speed: 1, radius: 180, thickness: 1.5, opacity: 0.6, mouseStrength: 50 }
+        };
+
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const preset = presets[e.target.dataset.preset];
+                if (preset) {
+                    for (const [key, value] of Object.entries(preset)) {
+                        params[key] = value;
+                        const slider = document.getElementById(key);
+                        if (slider) {
+                            slider.value = value;
+                            document.getElementById(key + 'Value').textContent = value;
+                        }
+                    }
+                    updateParticleCount();
+                }
+            });
+        });
+
+        // Initialize and start
+        initParticles();
+        animate();
+    </script>
+</body>
+</html>
